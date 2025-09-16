@@ -1,34 +1,42 @@
-# create/overwrite README.md
-cat > README.md << 'EOF'
-# PDP Performance Demo — Fast, Accessible Product Page
+# Next.js E-Commerce Performance Demo  
 
-![CI](https://github.com/<your-username>/pdp-performance-nextjs/actions/workflows/ci.yml/badge.svg)
+**Tech:** Next.js · React · TypeScript · Tailwind CSS · shadcn/ui · Framer Motion  
+**Focus:** Core Web Vitals (LCP/CLS/INP), Accessibility (WCAG AA), Modern UI, AI Integration  
 
-**Tech:** Next.js · React · TypeScript · Tailwind CSS · Framer Motion  
-**Focus:** Core Web Vitals (LCP/CLS/INP), Accessibility (WCAG AA), clean UI
+---
 
-## Overview
-A reference Product Detail Page (PDP) built with Next.js to demonstrate **performance-first** and **accessibility-first** frontend engineering. Includes SSR/ISR, image optimization, code-splitting, and motion used sparingly for clarity.
+## 📌 Overview
+A **mini e-commerce application** built with Next.js to showcase **performance-first, accessibility-driven, and scalable frontend architecture**.  
+The project demonstrates how to turn a simple design into a **production-ready web app** optimized for **speed, conversions, and delightful user experience**.  
 
-## Highlights
-- ⚡ **Performance:** target **LCP < 2s (mobile)**, **CLS < 0.1** with responsive images & skeletons
-- ♿ **Accessibility:** keyboard navigation, ARIA labels, color contrast suitable for WCAG AA
-- 🧩 **Reusability:** component architecture, clean state & folder structure
-- 🧪 **Quality-ready:** unit (RTL/Jest) & e2e (Playwright) scaffolds (to be added)
+---
 
-## Features
-- PDP with gallery, variant selector, price, and add-to-cart CTA
-- Optimistic UI & skeleton loading
-- Basic analytics hook for vitals
+## 🚀 Features
+- **Home Page** → Products listing grid with lazy loading & filters.  
+- **Product Detail Page (PDP)** → Optimized images, skeleton loading, variant selector.  
+- **Cart & Checkout** → Mock checkout flow with optimistic UI updates.  
+- **Design System** → Reusable components with Tailwind + shadcn/ui, documented in Storybook.  
+- **Animations** → Micro-interactions using Framer Motion.  
+- **AI Recommendation Widget** → “Products you may like” powered by OpenAI API.  
 
-## Tech Stack
-Next.js · React · TypeScript · Tailwind CSS · Framer Motion · (RHF + Zod optional)
+---
 
-## Performance Notes
-- Lighthouse (mobile) goal: **Performance ≥ 90**, **Accessibility ≥ 95**
-- Bundle trimmed via **dynamic imports** & **tree-shaking**
+## 🛠 Tech Stack
+- **Core:** Next.js (App Router), React, TypeScript  
+- **Styling:** Tailwind CSS, shadcn/ui, CSS Modules  
+- **Motion:** Framer Motion  
+- **Quality:** ESLint, Prettier, Jest, Playwright  
+- **CI/CD:** GitHub Actions, Vercel Deployment  
+- **AI & Automation:** OpenAI API, n8n / Make.com integrations  
 
-## Getting Started
-```bash
-pnpm i
-pnpm dev
+---
+
+## 📊 Performance Goals
+- Lighthouse (mobile): **Performance ≥ 90**, **Accessibility ≥ 95**  
+- **Core Web Vitals:** LCP < 2s, CLS < 0.1, INP < 200ms  
+
+---
+
+## 📩 Connect
+Built by **Hazem** — Senior Frontend Engineer.  
+👉 [LinkedIn](https://www.linkedin.com/in/hazemhishamelshorbagy) · [GitHub](https://github.com/hazemhishamelshorbagy) · Email: hazem.frontend@email.com
