@@ -21,6 +21,13 @@ The project demonstrates how to turn a simple design into a **production-ready w
 
 ---
 
+## 📸 Screenshots
+![Home Page](screenshots/home.png)
+![Product Detail](screenshots/detail.png)
+![Cart](screenshots/cart.png)
+![Checkout](screenshots/checkout.png)
+
+---
 ## 🛠 Tech Stack
 - **Core:** Next.js (App Router), React, TypeScript  
 - **Styling:** Tailwind CSS, shadcn/ui, CSS Modules  
