@@ -1,26 +1,17 @@
 @import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --radius: 12px;
+  --ring: 2px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.btn {
+  @apply inline-flex items-center justify-center rounded-[var(--radius)] px-4 py-2 text-sm font-medium transition
+          outline-none ring-offset-2 focus-visible:ring-[var(--ring)] focus-visible:ring-black/30;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+.btn-primary { @apply bg-black text-white hover:bg-black/90; }
+.btn-soft    { @apply bg-gray-200 text-gray-900 hover:bg-gray-300; }
+.card        { @apply rounded-[var(--radius)] border bg-white shadow-sm; }
+.input       { @apply w-full rounded-[var(--radius)] border px-3 py-2 text-sm outline-none
+                      focus-visible:ring-[var(--ring)] focus-visible:ring-black/30; }
+.label       { @apply block text-sm font-medium; }
+.badge       { @apply inline-flex items-center rounded-md bg-black/80 px-2 py-1 text-[10px] font-medium text-white; }

@@ -1,18 +1,17 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { useCart } from "../store/cart";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCart } from "../store/cart";
 
 function centsToUSD(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
-// 1) schema
+/** ── schema (RHF + Zod) ─────────────────────────────────────────────── */
 const CheckoutSchema = z.object({
   name: z.string().min(2, "Name is too short"),
   email: z.string().email("Invalid email"),
@@ -22,21 +21,23 @@ const CheckoutSchema = z.object({
   card: z
     .string()
     .min(12, "Card number too short")
-    .max(19, "Card number too long"),
+    .max(24, "Card number too long"),
 });
-
 type CheckoutValues = z.infer<typeof CheckoutSchema>;
 
+/** ── component ──────────────────────────────────────────────────────── */
 export default function CheckoutPage() {
   const router = useRouter();
   const items = useCart((s) => s.items);
   const totalCents = useCart((s) => s.totalCents);
   const clear = useCart((s) => s.clear);
-
+console.log("checkout items", items);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setValue,
+    watch,
   } = useForm<CheckoutValues>({
     resolver: zodResolver(CheckoutSchema),
     defaultValues: {
@@ -44,158 +45,181 @@ export default function CheckoutPage() {
       email: "",
       address: "",
       city: "",
-      country: "",
+      country: "Egypt",
       card: "",
     },
   });
+
+  // simple visual grouping of the card input (no external lib)
+  const card = watch("card");
+  const formatCard = (v: string) =>
+    v
+      .replace(/[^\d ]/g, "")
+      .replace(/\s+/g, "")
+      .slice(0, 19)
+      .replace(/(\d{4})(?=\d)/g, "$1 ")
+      .trim();
 
   if (items.length === 0) {
     return (
       <div className="py-16 text-center">
         <h1 className="text-2xl font-semibold">Your cart is empty</h1>
-        <p className="mt-2 text-gray-600">
-          Add products first, then return to checkout.
-        </p>
-        <Link
-          href="/"
-          className="mt-6 inline-block rounded bg-black px-4 py-2 text-white"
-        >
+        <p className="mt-2 text-gray-600">Add products first, then return to checkout.</p>
+        <Link href="/" className="btn btn-primary mt-6 inline-block">
           Continue Shopping
         </Link>
       </div>
     );
   }
 
-  const onSubmit = async (data: CheckoutValues) => {
-    // simulate processing / API call
-    await new Promise((r) => setTimeout(r, 700));
-    // normally you would send data + items to your backend here.
+  const onSubmit = async (_data: CheckoutValues) => {
+    // simulate server processing
+    await new Promise((r) => setTimeout(r, 600));
+    clear();
     router.push("/checkout/success");
-    clear(); // clear cart on successful “order”
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2">
-      {/* form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <h1 className="text-2xl font-semibold">Checkout</h1>
+    <div className="grid gap-8 lg:grid-cols-3">
+      {/* LEFT: form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-2 card p-6 space-y-6">
+        <header className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight">Checkout</h1>
+          <p className="text-sm text-gray-600">
+            Secure and fast — your data is not stored. Fields marked * are required.
+          </p>
+        </header>
 
-        <div>
-          <label className="block text-sm font-medium">Full name</label>
-          <input
-            {...register("name")}
-            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-            placeholder="Hazem Mohamed"
-            aria-invalid={!!errors.name}
-          />
-          {errors.name && (
-            <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Email</label>
-          <input
-            {...register("email")}
-            type="email"
-            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-            placeholder="you@example.com"
-            aria-invalid={!!errors.email}
-          />
-          {errors.email && (
-            <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium">Address</label>
-          <input
-            {...register("address")}
-            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-            placeholder="123 Main St"
-            aria-invalid={!!errors.address}
-          />
-          {errors.address && (
-            <p className="mt-1 text-xs text-red-600">
-              {errors.address.message}
-            </p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
+        {/* Contact */}
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium">Contact</h2>
           <div>
-            <label className="block text-sm font-medium">City</label>
+            <label className="label">Full name *</label>
             <input
-              {...register("city")}
-              className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-              placeholder="Cairo"
-              aria-invalid={!!errors.city}
+              {...register("name")}
+              className="input mt-1"
+              placeholder="Hazem Mohamed"
+              aria-invalid={!!errors.name}
             />
-            {errors.city && (
-              <p className="mt-1 text-xs text-red-600">{errors.city.message}</p>
-            )}
+            {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
           </div>
+
           <div>
-            <label className="block text-sm font-medium">Country</label>
+            <label className="label">Email *</label>
             <input
-              {...register("country")}
-              className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-              placeholder="Egypt"
-              aria-invalid={!!errors.country}
+              {...register("email")}
+              type="email"
+              className="input mt-1"
+              placeholder="you@example.com"
+              aria-invalid={!!errors.email}
             />
-            {errors.country && (
-              <p className="mt-1 text-xs text-red-600">
-                {errors.country.message}
-              </p>
-            )}
+            {errors.email && <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>}
           </div>
-        </div>
+        </section>
 
-        <div>
-          <label className="block text-sm font-medium">Card number</label>
-          <input
-            {...register("card")}
-            inputMode="numeric"
-            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm tracking-widest"
-            placeholder="4242 4242 4242 4242"
-            aria-invalid={!!errors.card}
-          />
-          {errors.card && (
-            <p className="mt-1 text-xs text-red-600">{errors.card.message}</p>
-          )}
-        </div>
+        <div className="h-px bg-gray-200" />
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="mt-2 rounded-lg bg-black px-4 py-2 text-white text-sm font-medium hover:bg-black/90 disabled:opacity-60"
-        >
-          {isSubmitting ? "Processing…" : "Place Order"}
-        </button>
+        {/* Shipping */}
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium">Shipping</h2>
+
+          <div>
+            <label className="label">Address *</label>
+            <input
+              {...register("address")}
+              className="input mt-1"
+              placeholder="123 Main St"
+              aria-invalid={!!errors.address}
+            />
+            {errors.address && <p className="mt-1 text-xs text-red-600">{errors.address.message}</p>}
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <label className="label">City *</label>
+              <input
+                {...register("city")}
+                className="input mt-1"
+                placeholder="Cairo"
+                aria-invalid={!!errors.city}
+              />
+              {errors.city && <p className="mt-1 text-xs text-red-600">{errors.city.message}</p>}
+            </div>
+            <div>
+              <label className="label">Country *</label>
+              <select
+                {...register("country")}
+                className="input mt-1"
+                aria-invalid={!!errors.country}
+              >
+                <option>Egypt</option>
+                <option>Saudi Arabia</option>
+                <option>United Arab Emirates</option>
+                <option>Qatar</option>
+                <option>Kuwait</option>
+                <option>United Kingdom</option>
+                <option>Germany</option>
+                <option>United States</option>
+              </select>
+              {errors.country && (
+                <p className="mt-1 text-xs text-red-600">{errors.country.message}</p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <div className="h-px bg-gray-200" />
+
+        {/* Payment */}
+        <section className="space-y-3">
+          <h2 className="text-lg font-medium">Payment</h2>
+          <div>
+            <label className="label">Card number *</label>
+            <input
+              {...register("card")}
+              value={card}
+              onChange={(e) => setValue("card", formatCard(e.target.value), { shouldValidate: true })}
+              inputMode="numeric"
+              className="input mt-1 tracking-widest"
+              placeholder="4242 4242 4242 4242"
+              aria-invalid={!!errors.card}
+            />
+            {errors.card && <p className="mt-1 text-xs text-red-600">{errors.card.message}</p>}
+          </div>
+        </section>
+
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <Link href="/cart" className="btn btn-soft">Back to Cart</Link>
+          <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+            {isSubmitting ? "Processing…" : "Place Order"}
+          </button>
+        </div>
       </form>
 
-      {/* order summary */}
-      <aside className="space-y-4">
-        <h2 className="text-xl font-semibold">Order Summary</h2>
-
-        <ul className="divide-y rounded-lg border bg-white">
+      {/* RIGHT: order summary */}
+      <aside className="card p-6 h-max lg:sticky lg:top-20 space-y-4">
+        <h2 className="text-lg font-semibold">Order Summary</h2>
+        <ul className="divide-y">
           {items.map((i) => (
-            <li key={i.id} className="flex items-center justify-between p-4">
+            <li key={i.id} className="flex items-center justify-between py-3">
               <div>
                 <p className="font-medium">{i.name}</p>
                 <p className="text-sm text-gray-600">Qty: {i.qty}</p>
               </div>
-              <p className="text-sm text-gray-700">
-                {centsToUSD(i.price * i.qty)}
-              </p>
+              <p className="text-sm text-gray-700">{centsToUSD(i.price * i.qty)}</p>
             </li>
           ))}
         </ul>
 
+        <div className="h-px bg-gray-200" />
         <div className="flex items-center justify-between text-lg font-medium">
           <span>Total</span>
           <span>{centsToUSD(totalCents())}</span>
         </div>
+
+        <p className="text-xs text-gray-600">
+          Prices include taxes where applicable. Shipping is calculated at the next step.
+        </p>
       </aside>
     </div>
   );
