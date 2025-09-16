@@ -1,6 +1,6 @@
 # Next.js E-Commerce Performance Demo  
 
-**Tech:** Next.js · React · TypeScript · Tailwind CSS · shadcn/ui · Framer Motion  
+**Tech:** Next.js · React · TypeScript · Tailwind CSS ·  · Framer Motion  
 **Focus:** Core Web Vitals (LCP/CLS/INP), Accessibility (WCAG AA), Modern UI, AI Integration  
 
 ---
@@ -30,7 +30,7 @@ The project demonstrates how to turn a simple design into a **production-ready w
 ---
 ## 🛠 Tech Stack
 - **Core:** Next.js (App Router), React, TypeScript  
-- **Styling:** Tailwind CSS, shadcn/ui, CSS Modules  
+- **Styling:** Tailwind CSS, CSS Modules  
 - **Motion:** Framer Motion  
 - **Quality:** ESLint, Prettier, Jest, Playwright  
 - **CI/CD:** GitHub Actions, Vercel Deployment  
