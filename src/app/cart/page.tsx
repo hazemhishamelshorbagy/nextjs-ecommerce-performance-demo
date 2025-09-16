@@ -4,7 +4,7 @@ import Link from "next/link";
 
 function centsToUSD(cents: number) { return `$${(cents / 100).toFixed(2)}`; }
 
-export default function CartPage() {
+export default function CartPage()  {
   const items = useCart((s) => s.items);
   const remove = useCart((s) => s.remove);
   const clear = useCart((s) => s.clear);
